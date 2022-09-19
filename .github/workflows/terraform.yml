@@ -1,0 +1,70 @@
+name: terraform
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on pull request events but only if ".tf" files are changed
+  pull_request:
+    paths:
+      - '**.tf'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  create-bucket:
+    runs-on: ubuntu-22.04
+
+    defaults:
+      run:
+        working-directory: tf/
+    steps:
+    - uses: actions/checkout@v2
+    - uses: hashicorp/setup-terraform@v2
+
+    - name: Terraform fmt
+      id: fmt
+      run: terraform fmt -check
+      continue-on-error: true
+
+    - name: Terraform Init
+      id: init
+      run: terraform init
+
+    - name: Terraform Validate
+      id: validate
+      run: terraform validate -no-color
+
+    - name: Terraform Plan
+      id: plan
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: eu-west-1
+        PORT_CLIENT_ID: ${{ secrets.PORT_CLIENT_ID }}
+        PORT_CLIENT_SECRET: ${{ secrets.PORT_CLIENT_SECRET }}
+      run: terraform plan -no-color
+      
+    - name: Terraform Apply
+      id: apply
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: eu-west-1
+        PORT_CLIENT_ID: ${{ secrets.PORT_CLIENT_ID }}
+        PORT_CLIENT_SECRET: ${{ secrets.PORT_CLIENT_SECRET }}
+      run: terraform apply -auto-approve -input=false
+    
+    - name: Update Port Action
+      id: update-port-action
+      if: ${{ always() }}
+      env:
+        ACTION_STATUS: ${{ steps.apply.outcome == 'success' && 'SUCCESS' || 'FAILURE' }}
+        ACTION_RUN_LINK: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        PORT_ACTION_RUN_ID: ${{ github.head_ref || github.ref_name }}
+        PORT_CLIENT_ID: ${{ secrets.PORT_CLIENT_ID }}
+        PORT_CLIENT_SECRET: ${{ secrets.PORT_CLIENT_SECRET }}
+      run: |
+        token=$(${GITHUB_WORKSPACE}/.github/scripts/get_api_token.sh)
+        curl --fail-with-body -X PATCH https://api.getport.io/v1/actions/runs/$PORT_ACTION_RUN_ID \
+          -H "Authorization: Bearer $token" -H 'Content-Type: application/json' \
+          -d "{\"status\": \"$ACTION_STATUS\", \"link\": \"$ACTION_RUN_LINK\"}"

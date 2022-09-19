@@ -1,0 +1,78 @@
+name: github-action
+
+# Controls when the workflow will run
+on:
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      bucketName:
+        description: 'New S3 Bucket globally unique name'
+        required: true
+        type: string
+      awsRegion:
+        description: 'New S3 Bucket Region'
+        required: true
+        type: string
+      acl:
+        description: 'New S3 Bucket ACL'
+        required: true
+        type: string
+      runId:
+        description: 'Port Action Run ID'
+        required: true
+        type: string
+
+jobs:
+  create-bucket:
+    runs-on: ubuntu-22.04
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Create bucket in S3
+      id: create
+      uses: aitorres/aws-s3-create-bucket@v1.2.0
+      with:
+        bucket-name: ${{ inputs.bucketName }}
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ inputs.awsRegion }}
+        acl: ${{ inputs.acl }}
+
+    - name: Get current date
+      id: date
+      run: echo "::set-output name=date::$(date +'%Y-%m-%dT%H:%M:%SZ')"
+
+    - name: Create S3 bucket entity in Port
+      id: create-port-entity
+      uses: port-labs/port-github-action@v1
+      with:
+        clientId: ${{ secrets.PORT_CLIENT_ID }}
+        clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
+        operation: UPSERT
+        identifier: ${{ inputs.bucketName }}
+        title: ${{ inputs.bucketName }}
+        blueprint: S3Bucket
+        properties: |
+          {
+            "acl": "${{ inputs.acl }}",
+            "awsRegion": "${{ inputs.awsRegion }}",
+            "createdDate": "${{ steps.date.outputs.date }}",
+            "S3Link": "https://s3.console.aws.amazon.com/s3/buckets/${{ inputs.bucketName }}"
+          }
+    
+    - name: Update Port Action
+      id: update-port-action
+      if: ${{ always() }}
+      env:
+        ACTION_STATUS: ${{ steps.create.outcome == 'success' && 'SUCCESS' || 'FAILURE' }}
+        ACTION_RUN_LINK: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        PORT_ACTION_RUN_ID: ${{ inputs.runId }}
+        PORT_CLIENT_ID: ${{ secrets.PORT_CLIENT_ID }}
+        PORT_CLIENT_SECRET: ${{ secrets.PORT_CLIENT_SECRET }}
+      run: |
+        token=$(${GITHUB_WORKSPACE}/.github/scripts/get_api_token.sh)
+        curl --fail-with-body -X PATCH https://api.getport.io/v1/actions/runs/$PORT_ACTION_RUN_ID \
+          -H "Authorization: Bearer $token" -H 'Content-Type: application/json' \
+          -d "{\"status\": \"$ACTION_STATUS\", \"link\": \"$ACTION_RUN_LINK\"}"
