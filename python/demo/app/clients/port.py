@@ -22,7 +22,7 @@ def get_port_api_token():
     return token_response.json()['accessToken']
 
 
-def create_entity(blueprint: str, identifier: str, properties: dict, run_id: str, title: str = None):
+def create_entity(blueprint: str, identifier: str, body: dict, run_id: str, title: str = None):
     """
     Create new entity for blueprint in Port
     """
@@ -30,10 +30,6 @@ def create_entity(blueprint: str, identifier: str, properties: dict, run_id: str
     token = get_port_api_token()
     headers = {
         'Authorization': f"Bearer {token}"
-    }
-    body = {
-      "title": title if title else identifier,
-      "properties": properties
     }
 
     logger.info(f"create entity with: {json.dumps(body)}")

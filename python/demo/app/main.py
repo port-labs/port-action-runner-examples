@@ -1,7 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
 
-from api.endpoints.bucket import router
+from api.endpoints.createService import router
 from core.config import settings
 
 app = FastAPI(
