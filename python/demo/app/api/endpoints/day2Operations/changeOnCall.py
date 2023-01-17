@@ -28,7 +28,7 @@ async def changeOnCall(webhook: Webhook):
 
         message = 'Replica count finished successfully' if 200 <= patch_status <= 299 else 'Replica count update failed'
         action_status = 'SUCCESS' if 200 <= patch_status <= 299 else 'FAILURE'
-        port.update_action(run_id, message, action_status)
+        port.update_action(run_id, message, action_status, link='https://getport-io.pagerduty.com/service-directory/PAS5I1V')
         return {'status': action_status}
 
     return {'status': 'SUCCESS'}

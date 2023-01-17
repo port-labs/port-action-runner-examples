@@ -1,4 +1,5 @@
 import logging
+import random
 from fastapi import APIRouter
 
 from clients import port
@@ -26,7 +27,7 @@ async def redeployImageTag(webhook: Webhook):
 
         message = 'Redeploy finished successfully' if 200 <= create_status <= 299 else 'Redeploy failed'
         action_status = 'SUCCESS' if 200 <= create_status <= 299 else 'FAILURE'
-        port.update_action(run_id, message, action_status)
+        port.update_action(run_id, message, action_status, link="https://github.com/port-labs/repositoryName/actions/runs/" + str(random.randint(1,100)))
         return {'status': action_status}
 
     return {'status': 'SUCCESS'}

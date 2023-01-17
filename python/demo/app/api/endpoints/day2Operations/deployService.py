@@ -1,6 +1,7 @@
 import logging
 import datetime
 import uuid
+import random
 from fastapi import APIRouter
 
 from clients import port
@@ -97,6 +98,6 @@ async def deployService(webhook: Webhook):
             create_status = port.create_entity(blueprint='deployment', identifier='',
                                                body=deployment, run_id=run_id)
 
-        port.update_action(run_id, message, action_status)
+        port.update_action(run_id, message, action_status, link="https://github.com/port-labs/repositoryName/actions/runs/" + str(random.randint(1,100)))
 
         return {'status': action_status}

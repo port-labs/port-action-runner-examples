@@ -1,7 +1,7 @@
 import logging
 from fastapi import APIRouter
 import datetime
-
+import random
 from clients import port
 from schemas.webhook import Webhook
 
@@ -44,7 +44,7 @@ async def getTempPermission(webhook: Webhook):
             relations = {
                 "cloudResource": entity_identifier,
             }
-            
+
         body = {
         "title": "Ibrahim-Troubleshooting",
         "icon": "Cluster",
@@ -60,7 +60,7 @@ async def getTempPermission(webhook: Webhook):
 
         message = 'Get temporary permission for cluster finished successfully' if 200 <= create_status <= 299 else 'Get temporary permission for cluster failed'
         action_status = 'SUCCESS' if 200 <= create_status <= 299 else 'FAILURE'
-        port.update_action(run_id, message, action_status)
+        port.update_action(run_id, message, action_status, "https://github.com/port-labs/repositoryName/actions/runs/" + str(random.randint(1,100)))
         return {'status': action_status}
 
     return {'status': 'SUCCESS'}

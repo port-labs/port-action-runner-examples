@@ -1,5 +1,6 @@
 import logging
 from fastapi import APIRouter
+import random
 
 from clients import port
 from schemas.webhook import Webhook
@@ -22,7 +23,7 @@ async def restartRunningService(webhook: Webhook):
 
         message = 'Restart finished successfully'
         action_status = 'SUCCESS'
-        port.update_action(run_id, message, action_status)
+        port.update_action(run_id, message, action_status, link="https://github.com/port-labs/repositoryName/actions/runs/" + str(random.randint(1,100)))
         return {'status': action_status}
 
     return {'status': 'SUCCESS'}

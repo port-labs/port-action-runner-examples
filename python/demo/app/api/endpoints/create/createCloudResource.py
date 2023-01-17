@@ -1,6 +1,7 @@
 import logging
 from fastapi import APIRouter, Depends
 from datetime import datetime
+import random
 
 from api.deps import verify_webhook
 from clients import port
@@ -39,5 +40,5 @@ async def createCloudResource(webhook: Webhook):
 
         message = 'Service created successfully' if 200 <= create_status <= 299 else 'Service creation failed'
         action_status = 'SUCCESS' if 200 <= create_status <= 299 else 'FAILURE'
-        port.update_action(run_id, message, action_status)
+        port.update_action(run_id, message, action_status, link="https://github.com/port-labs/repositoryName/actions/runs/" + str(random.randint(1,100)))
         return {'status': action_status}

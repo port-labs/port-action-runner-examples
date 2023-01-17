@@ -20,8 +20,7 @@ async def addMongoDatabase(webhook: Webhook):
 
     if action_type == 'DAY-2' and action_identifier == 'addMongoDatabase':
         run_id = webhook.context.runId
-
         message = 'Pr Opened successfully'
         action_status = 'SUCCESS'
-        port.update_action(run_id, message, action_status, link = "https://github.com/port-labs/pulls/" + str(random.randint(1,100)))
+        port.update_action(run_id, message, action_status, link = "https://jenkins.getport.net/job/service/job/mongo/" + str(random.randint(1,100)))
         return {'status': action_status}

@@ -1,5 +1,6 @@
 import logging
 import datetime
+import random
 
 from fastapi import APIRouter
 
@@ -42,6 +43,6 @@ async def createEnv(webhook: Webhook):
         delete_status = port.delete_entity(blueprint=blueprint, identifier=entity_identifier, run_id=run_id)
         message = 'Developer Env deleted successfully' if 200 <= delete_status <= 299 else 'Developer Env deletion failed'
         action_status = 'SUCCESS' if 200 <= delete_status <= 299 else 'FAILURE'
-        port.update_action(run_id, message, action_status)
+        port.update_action(run_id, message, action_status, link = "https://jenkins.getport.net/job/service/job/mongo/" + str(random.randint(1,100)))
 
         return {'status': action_status}

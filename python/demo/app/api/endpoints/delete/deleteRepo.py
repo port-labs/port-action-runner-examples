@@ -1,6 +1,6 @@
 import logging
 import datetime
-
+import random
 from fastapi import APIRouter
 
 from clients import port
@@ -50,7 +50,7 @@ async def createEnv(webhook: Webhook):
             delete_status = port.delete_entity(blueprint=blueprint, identifier=entity_identifier, run_id=run_id)
             message = 'Service deleted successfully' if 200 <= delete_status <= 299 else 'Service deletion failed'
             action_status = 'SUCCESS' if 200 <= delete_status <= 299 else 'FAILURE'
-            port.update_action(run_id, message, action_status)
+            port.update_action(run_id, message, action_status, link = "https://github.com/port-labs/repositoryName/actions/runs/" + str(random.randint(1,100)))
         else:
             message = 'Service deletion cancelled'
             action_status = 'FAILURE'

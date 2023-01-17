@@ -5,6 +5,7 @@ from fastapi import APIRouter
 
 from clients import port
 from schemas.webhook import Webhook
+import random
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -52,6 +53,6 @@ async def createEnv(webhook: Webhook):
 
         message = 'Service created successfully' if 200 <= create_status <= 299 else 'Service creation failed'
         action_status = 'SUCCESS' if 200 <= create_status <= 299 else 'FAILURE'
-        port.update_action(run_id, message, action_status)
+        port.update_action(run_id, message, action_status, link="https://github.com/port-labs/repositoryName/actions/runs/" + str(random.randint(1,100)))
 
         return {'status': action_status}

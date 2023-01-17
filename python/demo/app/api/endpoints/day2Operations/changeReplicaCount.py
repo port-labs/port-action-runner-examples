@@ -3,6 +3,7 @@ from fastapi import APIRouter
 
 from clients import port
 from schemas.webhook import Webhook
+import random
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -29,7 +30,7 @@ async def changeReplicaCount(webhook: Webhook):
 
         message = 'Replica count finished successfully' if 200 <= patch_status <= 299 else 'Replica count update failed'
         action_status = 'SUCCESS' if 200 <= patch_status <= 299 else 'FAILURE'
-        port.update_action(run_id, message, action_status)
+        port.update_action(run_id, message, action_status, "https://github.com/port-labs/repositoryName/actions/runs/" + str(random.randint(1,100)))
         return {'status': action_status}
 
     return {'status': 'SUCCESS'}

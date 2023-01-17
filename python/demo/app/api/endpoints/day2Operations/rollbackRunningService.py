@@ -1,6 +1,7 @@
 import logging
 from fastapi import APIRouter
 import uuid
+import random
 
 from clients import port
 from schemas.webhook import Webhook
@@ -32,5 +33,5 @@ async def rollbackRunningService(webhook: Webhook):
                                       
         message = 'rollBack finished successfully' if 200 <= patch_status <= 299 else 'lock failed'
         action_status = 'SUCCESS' if 200 <= patch_status <= 299 else 'FAILURE'
-        port.update_action(run_id, message, action_status)
+        port.update_action(run_id, message, action_status, link = "https://jenkins.getport.net/job/service/job/mongo/" + str(random.randint(1,100)))
         return {'status': action_status}
