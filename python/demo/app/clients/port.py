@@ -63,7 +63,3 @@ def update_action(run_id: str, message: str, status: Union[Literal['FAILURE'], L
     logger.info(f"update action response - status: {response.status_code}, body: {json.dumps(response.json())}")
 
     return response.status_code
-
-# fix day order
-# lock unlock
-# revert image tag
