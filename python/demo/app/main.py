@@ -5,7 +5,8 @@ from api.endpoints.createService import createServiceRouter
 from api.endpoints.changeReplicaCount import changeReplicaCountRouter
 from api.endpoints.createCloudResource import createCloudResourceRouter
 from api.endpoints.restartRunningService import restartRunningServiceRouter
-from api.endpoints.lockUnlock import lockUnlockRouter
+from api.endpoints.lockUnlock import lockUnlockRouterRouter
+from api.endpoints.createDeveloperEnv import createDeveloperEnvRouter
 
 from core.config import settings
 
@@ -17,7 +18,8 @@ app.include_router(createServiceRouter, prefix=settings.API_STR)
 app.include_router(changeReplicaCountRouter, prefix=settings.API_STR)
 app.include_router(createCloudResourceRouter, prefix=settings.API_STR)
 app.include_router(restartRunningServiceRouter, prefix=settings.API_STR)
-
+app.include_router(lockUnlockRouterRouter, prefix=settings.API_STR)
+app.include_router(createDeveloperEnvRouter, prefix=settings.API_STR)
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=3006, reload=True)
