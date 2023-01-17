@@ -3,6 +3,7 @@ from fastapi import FastAPI
 
 from api.endpoints.createService import createServiceRouter
 from api.endpoints.changeReplicaCount import changeReplicaCountRouter
+from api.endpoints.changeOnCall import changeOnCall
 from api.endpoints.createCloudResource import createCloudResourceRouter
 from api.endpoints.restartRunningService import restartRunningServiceRouter
 from api.endpoints.lockUnlock import lockUnlockRouter
