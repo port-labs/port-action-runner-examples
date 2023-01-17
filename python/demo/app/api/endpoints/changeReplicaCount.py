@@ -31,7 +31,7 @@ async def test(webhook: Webhook):
                                                body=body, run_id=run_id)
 
         message = 'Replica count finished successfully' if 200 <= patch_status <= 299 else 'Replica count update failed'
-        action_status = 'SUCCESS' if 200 <= create_status <= 299 else 'FAILURE'
+        action_status = 'SUCCESS' if 200 <= patch_status <= 299 else 'FAILURE'
         port.update_action(run_id, message, action_status)
         return {'status': action_status}
 
