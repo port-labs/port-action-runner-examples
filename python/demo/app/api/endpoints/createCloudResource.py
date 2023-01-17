@@ -22,13 +22,17 @@ async def createCloudResource(webhook: Webhook):
      if action_type == 'CREATE' and action_identifier == 'CreateCloudResource':
         run_id = webhook.context.runId
         body = {
+        "identifier": properties.get("name"),
+        "title": properties.get("name",""),
+        "team": properties.get("team",""),
         "properties": {
-            "name": properties["name"],
-            "team": properties["team"],
-            "service": properties["service"],
+            "service": properties.get("service",""),
             "region": properties["region"],
+            "url": "https://us-east-1.console.gcp.com/rds/" + properties.get("name")
             },
-        "relations": {}
+        "relations": {
+            "cloud-account": properties["region"]
+        }
     }
         create_status = port.create_entity(blueprint=blueprint, identifier='',
                                                body=body, run_id=run_id)
