@@ -1,10 +1,7 @@
 import logging
-from fastapi import APIRouter, Depends
-from datetime import datetime
+from fastapi import APIRouter
 
-from api.deps import verify_webhook
 from clients import port
-from core.config import settings
 from schemas.webhook import Webhook
 
 logging.basicConfig(level=logging.INFO)
@@ -14,12 +11,12 @@ createServiceRouter = APIRouter()
 
 @createServiceRouter.post("/createService")
 async def test(webhook: Webhook):
-     action_type = webhook.payload['action']['trigger']
-     action_identifier = webhook.payload['action']['identifier']
-     properties = webhook.payload['properties']
-     blueprint = webhook.context.blueprint
+    action_type = webhook.payload['action']['trigger']
+    action_identifier = webhook.payload['action']['identifier']
+    properties = webhook.payload['properties']
+    blueprint = webhook.context.blueprint
 
-     if action_type == 'CREATE' and action_identifier == 'createService':
+    if action_type == 'CREATE' and action_identifier == 'createService':
         run_id = webhook.context.runId
         body = {
         "properties": {
@@ -44,4 +41,4 @@ async def test(webhook: Webhook):
         action_status = 'SUCCESS' if 200 <= create_status <= 299 else 'FAILURE'
         port.update_action(run_id, message, action_status)
         return {'status': 'SUCCESS'}
-     return {'status': 'SUCCESS'}
+    return {'status': 'SUCCESS'}
