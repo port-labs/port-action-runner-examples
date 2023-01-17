@@ -17,6 +17,9 @@ from api.endpoints.day2Operations.rollbackRunningService import rollbackRunningS
 from api.endpoints.day2Operations.changeOnCall import changeOnCallRouter
 from api.endpoints.day2Operations.addS3Bucket import addS3BucketRouter
 from api.endpoints.day2Operations.addMongoDatabase import addMongoDatabaseRouter
+from api.endpoints.delete.deleteRepo import deleteRepoRouter
+from api.endpoints.delete.deleteDeveloperEnv import deleteDeveloperEnvRouter
+
 from core.config import settings
 
 app = FastAPI(
@@ -29,14 +32,16 @@ app.include_router(createCloudResourceRouter, prefix=settings.API_STR)
 app.include_router(restartRunningServiceRouter, prefix=settings.API_STR)
 app.include_router(lockUnlockRouter, prefix=settings.API_STR)
 app.include_router(redeployImageTagRouter, prefix=settings.API_STR)
-app.include_router(getTempPermissionRouter, prefix=settings.API_STR)
 app.include_router(createDeveloperEnvRouter, prefix=settings.API_STR)
+app.include_router(getTempPermissionRouter, prefix=settings.API_STR)
 app.include_router(createInHousePackageRouter, prefix=settings.API_STR)
 app.include_router(deployServiceRouter, prefix=settings.API_STR)
 app.include_router(extendEnvironmentTTLRouter, prefix=settings.API_STR)
 app.include_router(changeOwnershipRouter, prefix=settings.API_STR)
 app.include_router(rollbackRunningServiceRouter, prefix=settings.API_STR)
 app.include_router(changeOnCallRouter, prefix=settings.API_STR)
+app.include_router(deleteRepoRouter, prefix=settings.API_STR)
+app.include_router(deleteDeveloperEnvRouter, prefix=settings.API_STR)
 app.include_router(addS3BucketRouter, prefix=settings.API_STR)
 app.include_router(addMongoDatabaseRouter, prefix=settings.API_STR)
 

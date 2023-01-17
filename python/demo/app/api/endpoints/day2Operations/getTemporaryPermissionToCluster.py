@@ -34,6 +34,17 @@ async def getTempPermission(webhook: Webhook):
         elif ttl == "7 days":
             ttl = datetime.datetime.now() + datetime.timedelta(days=7)
         
+        relations = {}
+
+        if blueprint == 'k8s-cluster':
+            relations = {
+                "k8s-cluster": entity_identifier,
+            }
+        elif blueprint == 'cloudResource':
+            relations = {
+                "cloudResource": entity_identifier,
+            }
+            
         body = {
         "title": "Ibrahim-Troubleshooting",
         "icon": "Cluster",
@@ -43,9 +54,7 @@ async def getTempPermission(webhook: Webhook):
                 "reason": properties.get("reason",""),
                 "ttl": ttl.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
             },
-        "relations": {
-            "k8s-cluster": entity_identifier,
-        },
+        "relations": relations,
     }
         create_status = port.create_entity(blueprint='permission', identifier='',body=body, run_id=run_id)
 

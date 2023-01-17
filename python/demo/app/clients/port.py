@@ -40,10 +40,21 @@ def patch_entity(blueprint: str, identifier: str, body: dict, run_id: str, title
     Patch entity for blueprint in Port
     """
 
-    logger.info(f"create entity with: {json.dumps(body)}")
+    logger.info(f"patch entity with: {json.dumps(body)}")
     response = requests.patch(f"{settings.PORT_API_URL}/blueprints/{blueprint}/entities/{identifier}?run_id={run_id}",
                              json=body)
     logger.info(f"patch entity response - status: {response.status_code}, body: {json.dumps(response.json())}")
+
+    return response.status_code
+
+def delete_entity(blueprint: str, identifier: str, run_id: str, title: str = None):
+    """
+    delete entity for blueprint in Port
+    """
+
+    logger.info(f"delete entity")
+    response = requests.delete(f"{settings.PORT_API_URL}/blueprints/{blueprint}/entities/{identifier}?run_id={run_id}")
+    logger.info(f"delete entity response - status: {response.status_code}, body: {json.dumps(response.json())}")
 
     return response.status_code
 
