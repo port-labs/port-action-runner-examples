@@ -26,9 +26,9 @@ async def createService(webhook: Webhook):
             "replicaCount": properties.get("replicaCount",0),
             "language": properties.get("language", "GO"),
             "communication_method": properties.get("communication_method","GraphQL"),
-            "db":  properties.get("db", ""),
-            "queue": properties.get("queue", ""),
-            "description": properties.get("description", "")
+            "lifecycle": "Experimental",
+            "type": "Deployment",
+            "helmChart": "apiVersion: v2\nname: my-chart\nversion: 0.1.0\n\n# This is the chart's description\ndescription: A Helm chart for deploying a Node.js app\n\n# This is the chart's maintainer information\nmaintainer:\n  name: John Doe\n  email: john.doe@example.com\n\n# These are the chart's dependencies\ndependencies:\n  - name: redis\n    version: \"1.0.0\"\n    repository: \"https://kubernetes-charts.storage.googleapis.com\"\n\n# This is the chart's template configuration\ntemplates:\n  - deployment.yaml\n  - service.yaml\n  - ingress.yaml\n" 
             },
         "relations": {
             "domain": properties['domain'],
