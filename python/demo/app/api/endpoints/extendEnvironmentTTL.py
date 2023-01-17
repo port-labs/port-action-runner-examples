@@ -1,0 +1,56 @@
+import logging
+import datetime
+import uuid
+from fastapi import APIRouter
+
+from clients import port
+from schemas.webhook import Webhook
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+extendEnvironmentTTLRouter = APIRouter()
+
+@extendEnvironmentTTLRouter.post("/extendEnvironmentTTL")
+async def extendEnvironmentTTL(webhook: Webhook):
+    action_type = webhook.payload['action']['trigger']
+    action_identifier = webhook.payload['action']['identifier']
+    entity_identifier = webhook.payload['entity']['identifier']
+    properties = webhook.payload['properties']
+    entity = webhook.payload['entity']
+    blueprint = webhook.context.blueprint
+
+    if action_type == 'DAY-2' and action_identifier == 'ExtendEnvironmentTTL':
+       ttl = properties.get("ttl")
+       entityTTL = entity["properties"]["ttl"]
+       if(entityTTL == None):
+              entityTTL = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+
+       currentTime = datetime.datetime.strptime(entityTTL,"%Y-%m-%dT%H:%M:%S.%fZ")
+       newTime = currentTime
+       if ttl == "1 day":
+                newTime = currentTime + datetime.timedelta(days=1)
+       elif ttl == "1 hour":
+                newTime = currentTime + datetime.timedelta(hours=1)
+       elif ttl == "4 hours":
+                newTime =currentTime + datetime.timedelta(hours=4)
+       elif ttl == "3 days":
+                newTime = currentTime + datetime.timedelta(days=3)
+       elif ttl == "7 days":
+                newTime = currentTime + datetime.timedelta(days=7)
+       body = {
+            "identifier": entity_identifier,
+            "properties": {
+                "ttl": newTime.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+            }
+         }
+
+       run_id = webhook.context.runId
+  
+       patch_status = port.patch_entity(blueprint=blueprint, identifier=entity_identifier,
+                                               body=body, run_id=run_id)
+
+       message = 'lock finished successfully' if 200 <= patch_status <= 299 else 'lock failed'
+       action_status = 'SUCCESS' if 200 <= patch_status <= 299 else 'FAILURE'
+       port.update_action(run_id, message, action_status)
+       return {'status': action_status}

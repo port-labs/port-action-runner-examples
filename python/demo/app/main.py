@@ -10,7 +10,8 @@ from api.endpoints.redeployImageTag import redeployImageTagRouter
 from api.endpoints.createDeveloperEnv import createDeveloperEnvRouter
 from api.endpoints.createInHousePackage import createInHousePackageRouter
 from api.endpoints.getTemporaryPermissionToCluster import getTempPermissionRouter
-
+from api.endpoints.deployService import deployServiceRouter
+from api.endpoints.extendEnvironmentTTL import extendEnvironmentTTLRouter
 from core.config import settings
 
 app = FastAPI(
@@ -26,6 +27,8 @@ app.include_router(redeployImageTagRouter, prefix=settings.API_STR)
 app.include_router(getTempPermissionRouter, prefix=settings.API_STR)
 app.include_router(createDeveloperEnvRouter, prefix=settings.API_STR)
 app.include_router(createInHousePackageRouter, prefix=settings.API_STR)
+app.include_router(deployServiceRouter, prefix=settings.API_STR)
+app.include_router(extendEnvironmentTTLRouter, prefix=settings.API_STR)
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=3006, reload=True)
