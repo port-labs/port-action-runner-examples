@@ -42,17 +42,17 @@ async def createEnv(webhook: Webhook):
                 "ads",
                 "checkout"
             ]):
-            message = 'Service creation because it has depedencies'
+            message = 'Service deletion because it has depedencies'
             action_status = 'FAILURE'
             port.update_action(run_id, message, action_status)
             return {'status': action_status}
         if properties['confirm'] is True:
             delete_status = port.delete_entity(blueprint=blueprint, identifier=entity_identifier, run_id=run_id)
-            message = 'Service created successfully' if 200 <= delete_status <= 299 else 'Service creation failed'
+            message = 'Service deleted successfully' if 200 <= delete_status <= 299 else 'Service deletion failed'
             action_status = 'SUCCESS' if 200 <= delete_status <= 299 else 'FAILURE'
             port.update_action(run_id, message, action_status)
         else:
-            message = 'Service creation cancelled'
+            message = 'Service deletion cancelled'
             action_status = 'FAILURE'
             port.update_action(run_id, message, action_status)
         return {'status': action_status}
