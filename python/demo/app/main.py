@@ -15,7 +15,7 @@ from api.endpoints.day2Operations.extendEnvironmentTTL import extendEnvironmentT
 from api.endpoints.day2Operations.changeOwnership import changeOwnershipRouter
 from api.endpoints.day2Operations.rollbackRunningService import rollbackRunningServiceRouter
 from api.endpoints.day2Operations.changeOnCall import changeOnCallRouter
-
+from api.endpoints.day2Operations.addS3Bucket import addS3BucketRouter
 from core.config import settings
 
 app = FastAPI(
@@ -36,6 +36,7 @@ app.include_router(extendEnvironmentTTLRouter, prefix=settings.API_STR)
 app.include_router(changeOwnershipRouter, prefix=settings.API_STR)
 app.include_router(rollbackRunningServiceRouter, prefix=settings.API_STR)
 app.include_router(changeOnCallRouter, prefix=settings.API_STR)
+app.include_router(addS3BucketRouter, prefix=settings.API_STR)
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=3006, reload=True)
