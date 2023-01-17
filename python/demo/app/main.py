@@ -13,7 +13,10 @@ from api.endpoints.day2Operations.getTemporaryPermissionToCluster import getTemp
 from api.endpoints.day2Operations.deployService import deployServiceRouter
 from api.endpoints.day2Operations.extendEnvironmentTTL import extendEnvironmentTTLRouter
 from api.endpoints.day2Operations.changeOwnership import changeOwnershipRouter
+from api.endpoints.day2Operations.rollbackRunningService import rollbackRunningServiceRouter
 from api.endpoints.day2Operations.changeOnCall import changeOnCallRouter
+from api.endpoints.day2Operations.addS3Bucket import addS3BucketRouter
+from api.endpoints.day2Operations.addMongoDatabase import addMongoDatabaseRouter
 from api.endpoints.delete.deleteRepo import deleteRepoRouter
 
 from core.config import settings
@@ -34,8 +37,14 @@ app.include_router(createInHousePackageRouter, prefix=settings.API_STR)
 app.include_router(deployServiceRouter, prefix=settings.API_STR)
 app.include_router(extendEnvironmentTTLRouter, prefix=settings.API_STR)
 app.include_router(changeOwnershipRouter, prefix=settings.API_STR)
+app.include_router(rollbackRunningServiceRouter, prefix=settings.API_STR)
 app.include_router(changeOnCallRouter, prefix=settings.API_STR)
+<<<<<<< HEAD
 app.include_router(deleteRepoRouter, prefix=settings.API_STR)
+=======
+app.include_router(addS3BucketRouter, prefix=settings.API_STR)
+app.include_router(addMongoDatabaseRouter, prefix=settings.API_STR)
+>>>>>>> d8740889b593d7c958fbda28cb5b8a00689028db
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=3006, reload=True)
