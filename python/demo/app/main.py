@@ -1,18 +1,18 @@
 import uvicorn
 from fastapi import FastAPI
 
-from api.endpoints.createService import createServiceRouter
-from api.endpoints.changeReplicaCount import changeReplicaCountRouter
-from api.endpoints.createCloudResource import createCloudResourceRouter
-from api.endpoints.restartRunningService import restartRunningServiceRouter
-from api.endpoints.lockUnlock import lockUnlockRouter
-from api.endpoints.redeployImageTag import redeployImageTagRouter
-from api.endpoints.createDeveloperEnv import createDeveloperEnvRouter
-from api.endpoints.createInHousePackage import createInHousePackageRouter
-from api.endpoints.getTemporaryPermissionToCluster import getTempPermissionRouter
-from api.endpoints.deployService import deployServiceRouter
-from api.endpoints.extendEnvironmentTTL import extendEnvironmentTTLRouter
-from api.endpoints.changeOwnership import changeOwnershipRouter
+from api.endpoints.create.createService import createServiceRouter
+from api.endpoints.day2Operations.changeReplicaCount import changeReplicaCountRouter
+from api.endpoints.create.createCloudResource import createCloudResourceRouter
+from api.endpoints.day2Operations.restartRunningService import restartRunningServiceRouter
+from api.endpoints.day2Operations.lockUnlock import lockUnlockRouter
+from api.endpoints.day2Operations.redeployImageTag import redeployImageTagRouter
+from api.endpoints.create.createDeveloperEnv import createDeveloperEnvRouter
+from api.endpoints.create.createInHousePackage import createInHousePackageRouter
+from api.endpoints.day2Operations.getTemporaryPermissionToCluster import getTempPermissionRouter
+from api.endpoints.day2Operations.deployService import deployServiceRouter
+from api.endpoints.day2Operations.extendEnvironmentTTL import extendEnvironmentTTLRouter
+from api.endpoints.day2Operations.changeOwnership import changeOwnershipRouter
 from core.config import settings
 
 app = FastAPI(
