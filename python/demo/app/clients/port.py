@@ -47,7 +47,7 @@ def patch_entity(blueprint: str, identifier: str, body: dict, run_id: str, title
 
     return response.status_code
 
-def update_action(run_id: str, message: str, status: Union[Literal['FAILURE'], Literal['SUCCESS']]):
+def update_action(run_id: str, message: str, status: Union[Literal['FAILURE'], Literal['SUCCESS']], link=None):
     """
     Reports to Port on the status of an action run
     """
@@ -57,6 +57,9 @@ def update_action(run_id: str, message: str, status: Union[Literal['FAILURE'], L
         },
         'status': status
     }
+
+    if link:
+        body['link'] = link
 
     logger.info(f"update action with: {json.dumps(body)}")
     response = requests.patch(f"{settings.PORT_API_URL}/actions/runs/{run_id}", json=body)
