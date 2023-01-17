@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 changeReplicaCountRouter = APIRouter()
 
 @changeReplicaCountRouter.post("/scaleReplicaCount")
-async def test(webhook: Webhook):
+async def changeReplicaCount(webhook: Webhook):
      action_type = webhook.payload['action']['trigger']
      action_identifier = webhook.payload['action']['identifier']
      entity_identifier = webhook.payload['entity']['identifier']

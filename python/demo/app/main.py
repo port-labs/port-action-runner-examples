@@ -3,6 +3,8 @@ from fastapi import FastAPI
 
 from api.endpoints.createService import createServiceRouter
 from api.endpoints.changeReplicaCount import changeReplicaCountRouter
+from api.endpoints.createCloudResource import createCloudResourceRouter
+
 
 from core.config import settings
 
@@ -12,6 +14,7 @@ app = FastAPI(
 
 app.include_router(createServiceRouter, prefix=settings.API_STR)
 app.include_router(changeReplicaCountRouter, prefix=settings.API_STR)
+app.include_router(createCloudResourceRouter, prefix=settings.API_STR)
 
 
 if __name__ == "__main__":

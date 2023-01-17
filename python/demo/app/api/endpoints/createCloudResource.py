@@ -10,32 +10,25 @@ from schemas.webhook import Webhook
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-createServiceRouter = APIRouter()
+createCloudResourceRouter = APIRouter()
 
-@createServiceRouter.post("/createService")
-async def createService(webhook: Webhook):
+@createCloudResourceRouter.post("/CreateCloudResource")
+async def createCloudResource(webhook: Webhook):
      action_type = webhook.payload['action']['trigger']
      action_identifier = webhook.payload['action']['identifier']
      properties = webhook.payload['properties']
      blueprint = webhook.context.blueprint
 
-     if action_type == 'CREATE' and action_identifier == 'createService':
+     if action_type == 'CREATE' and action_identifier == 'CreateCloudResource':
         run_id = webhook.context.runId
         body = {
-        "identifier": properties.get("name",""),
         "properties": {
-            "repository": properties["repository"],
-            "replicaCount": properties.get("replicaCount",0),
-            "language": properties.get("language", "GO"),
-            "communication_method": properties.get("communication_method","GraphQL"),
-            "db":  properties.get("db", ""),
-            "queue": properties.get("queue", ""),
-            "description": properties.get("description", "")
+            "name": properties["name"],
+            "team": properties["team"],
+            "service": properties["service"],
+            "region": properties["region"],
             },
-        "relations": {
-            "domain": properties['domain'],
-        },
-        "team": properties["team"]
+        "relations": {}
     }
         create_status = port.create_entity(blueprint=blueprint, identifier='',
                                                body=body, run_id=run_id)
