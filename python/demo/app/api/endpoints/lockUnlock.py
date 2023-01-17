@@ -7,10 +7,10 @@ from schemas.webhook import Webhook
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-lockUnlockRouterRouter = APIRouter()
+lockUnlockRouter = APIRouter()
 
-@lockUnlockRouterRouter.post("/lock")
-async def lockUnlockRouter(webhook: Webhook):
+@lockUnlockRouter.post("/lock")
+async def lockUnlock(webhook: Webhook):
     action_type = webhook.payload['action']['trigger']
     action_identifier = webhook.payload['action']['identifier']
     entity_identifier = webhook.payload['entity']['identifier']
