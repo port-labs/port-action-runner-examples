@@ -10,9 +10,9 @@ from schemas.webhook import Webhook
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-router = APIRouter()
+createServiceRouter = APIRouter()
 
-@router.post("/createService", dependencies=[Depends(verify_webhook)])
+@createServiceRouter.post("/createService")
 async def test(webhook: Webhook):
      action_type = webhook.payload['action']['trigger']
      action_identifier = webhook.payload['action']['identifier']

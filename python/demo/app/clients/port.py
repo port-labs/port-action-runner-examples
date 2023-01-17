@@ -27,28 +27,30 @@ def create_entity(blueprint: str, identifier: str, body: dict, run_id: str, titl
     Create new entity for blueprint in Port
     """
 
-    token = get_port_api_token()
-    headers = {
-        'Authorization': f"Bearer {token}"
-    }
-
     logger.info(f"create entity with: {json.dumps(body)}")
     response = requests.post(f"{settings.PORT_API_URL}/blueprints/{blueprint}/entities?run_id={run_id}",
-                             json=body, headers=headers)
+                             json=body)
     logger.info(f"create entity response - status: {response.status_code}, body: {json.dumps(response.json())}")
 
     return response.status_code
 
 
+def patch_entity(blueprint: str, identifier: str, body: dict, run_id: str, title: str = None):
+    """
+    Patch entity for blueprint in Port
+    """
+
+    logger.info(f"create entity with: {json.dumps(body)}")
+    response = requests.patch(f"{settings.PORT_API_URL}/blueprints/{blueprint}/entities/{identifier}?run_id={run_id}",
+                             json=body)
+    logger.info(f"patch entity response - status: {response.status_code}, body: {json.dumps(response.json())}")
+
+    return response.status_code
+
 def update_action(run_id: str, message: str, status: Union[Literal['FAILURE'], Literal['SUCCESS']]):
     """
     Reports to Port on the status of an action run
     """
-
-    token = get_port_api_token()
-    headers = {
-        'Authorization': f"Bearer {token}"
-    }
     body = {
         'message': {
             'message': message
@@ -57,7 +59,11 @@ def update_action(run_id: str, message: str, status: Union[Literal['FAILURE'], L
     }
 
     logger.info(f"update action with: {json.dumps(body)}")
-    response = requests.patch(f"{settings.PORT_API_URL}/actions/runs/{run_id}", json=body, headers=headers)
+    response = requests.patch(f"{settings.PORT_API_URL}/actions/runs/{run_id}", json=body)
     logger.info(f"update action response - status: {response.status_code}, body: {json.dumps(response.json())}")
 
     return response.status_code
+
+# fix day order
+# lock unlock
+# revert image tag
