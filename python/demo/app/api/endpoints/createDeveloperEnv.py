@@ -1,6 +1,7 @@
 import logging
-from fastapi import APIRouter
 import datetime
+
+from fastapi import APIRouter
 
 from clients import port
 from schemas.webhook import Webhook
@@ -8,21 +9,19 @@ from schemas.webhook import Webhook
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-getTempPermissionRouter = APIRouter()
+createDeveloperEnvRouter = APIRouter()
 
-@getTempPermissionRouter.post("/getTemporaryPermission")
-async def getTempPermission(webhook: Webhook):
+@createDeveloperEnvRouter.post("/CreateEnvironment")
+async def createEnv(webhook: Webhook):
     action_type = webhook.payload['action']['trigger']
     action_identifier = webhook.payload['action']['identifier']
-    entity_identifier = webhook.payload['entity']['identifier']
     properties = webhook.payload['properties']
     blueprint = webhook.context.blueprint
 
-    if action_type == 'DAY-2' and action_identifier == 'getTemporaryPermission':
-        run_id = webhook.context.runId
+
+    if action_type == 'CREATE' and action_identifier == 'CreateEnvironment':
         run_id = webhook.context.runId
         ttl = properties.get("ttl")
-
         if ttl == "1 day":
             ttl = datetime.datetime.now() + datetime.timedelta(days=1)
         elif ttl == "1 hour":
@@ -35,23 +34,24 @@ async def getTempPermission(webhook: Webhook):
             ttl = datetime.datetime.now() + datetime.timedelta(days=7)
         
         body = {
-        "title": "Ibrahim-Troubleshooting",
-        "icon": "Cluster",
+        "identifier": properties["name"],
+        "title": properties["name"],
         "properties": {
-                "user": "ibrahimrotich@club-internet.com",
-                "status": "Pending",
-                "reason": properties.get("reason",""),
+                "owner": "yupanya414@comcast.biz",
+                "status":"Deploying",
+                "envUrl": "https://k8s.devenv/" + properties["name"],
                 "ttl": ttl.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
             },
         "relations": {
-            "k8s-cluster": entity_identifier,
+            "runningServices": properties['services'],
         },
+        "team": properties.get("team","")
     }
-        create_status = port.create_entity(blueprint='permission', identifier='',body=body, run_id=run_id)
+        create_status = port.create_entity(blueprint=blueprint, identifier='',
+                                               body=body, run_id=run_id)
 
-        message = 'Get temporary permission for cluster finished successfully' if 200 <= create_status <= 299 else 'Get temporary permission for cluster failed'
+        message = 'Service created successfully' if 200 <= create_status <= 299 else 'Service creation failed'
         action_status = 'SUCCESS' if 200 <= create_status <= 299 else 'FAILURE'
         port.update_action(run_id, message, action_status)
-        return {'status': action_status}
 
-    return {'status': 'SUCCESS'}
+        return {'status': action_status}
