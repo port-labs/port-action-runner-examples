@@ -29,8 +29,8 @@ async def createEnv(webhook: Webhook):
         "properties": {
                 "repository": properties.get("repository", ""),
                 "language": properties.get("language", "Python"),
-                "envUrl": "https://k8s.devenv/" + properties["name"],
-                "github-url": "https://github.com/port-labs/" + properties["name"],
+                "envUrl": "https://k8s.devenv/" + properties.get("name", ""),
+                "github-url": "https://github.com/port-labs/" + properties.get("name", ""),
                 "inHouse": True,
             },
         "relations": {},
