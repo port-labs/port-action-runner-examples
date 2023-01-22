@@ -35,19 +35,22 @@ async def getTempPermission(webhook: Webhook):
             ttl = datetime.datetime.now() + datetime.timedelta(days=7)
         
         relations = {}
+        icon = ''
 
         if blueprint == 'k8s-cluster':
+            icon = "Cluster"
             relations = {
                 "k8s-cluster": entity_identifier,
             }
         elif blueprint == 'cloudResource':
+            icon = 'Lock'
             relations = {
                 "cloudResource": entity_identifier,
             }
 
         body = {
         "title": "Ibrahim-Troubleshooting",
-        "icon": "Cluster",
+        "icon": icon,
         "properties": {
                 "user": "ibrahimrotich@club-internet.com",
                 "status": "Pending",
