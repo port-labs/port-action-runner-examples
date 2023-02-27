@@ -26,6 +26,7 @@ from api.endpoints.day2Operations.rollbackRunningService import \
     rollbackRunningServiceRouter
 from api.endpoints.delete.deleteDeveloperEnv import deleteDeveloperEnvRouter
 from api.endpoints.delete.deleteRepo import deleteRepoRouter
+from api.endpoints.day2Operations.addSecret import addSecretRouter
 from core.config import settings
 from fastapi import FastAPI
 
@@ -52,5 +53,7 @@ app.include_router(deleteDeveloperEnvRouter, prefix=settings.API_STR)
 app.include_router(addS3BucketRouter, prefix=settings.API_STR)
 app.include_router(addMongoDatabaseRouter, prefix=settings.API_STR)
 app.include_router(jupyterRouter, prefix=settings.API_STR)
+app.include_router(addSecretRouter, prefix=settings.API_STR)
+
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=3006, reload=True)
