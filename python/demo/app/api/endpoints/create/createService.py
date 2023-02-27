@@ -3,6 +3,7 @@ from fastapi import APIRouter
 import random
 from clients import port
 from schemas.webhook import Webhook
+import time
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -11,6 +12,7 @@ createServiceRouter = APIRouter()
 
 @createServiceRouter.post("/createService")
 async def createService(webhook: Webhook):
+    time.sleep(15)
     action_type = webhook.payload['action']['trigger']
     action_identifier = webhook.payload['action']['identifier']
     properties = webhook.payload['properties']

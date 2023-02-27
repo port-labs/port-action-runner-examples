@@ -1,4 +1,5 @@
 import logging
+import time
 from fastapi import APIRouter
 
 from clients import port
@@ -12,6 +13,7 @@ changeReplicaCountRouter = APIRouter()
 
 @changeReplicaCountRouter.post("/scaleReplicaCount")
 async def changeReplicaCount(webhook: Webhook):
+    time.sleep(15)
     action_type = webhook.payload['action']['trigger']
     action_identifier = webhook.payload['action']['identifier']
     entity_identifier = webhook.payload['entity']['identifier']

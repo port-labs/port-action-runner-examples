@@ -1,6 +1,7 @@
 import logging
 import datetime
 import random 
+import time
 
 from fastapi import APIRouter
 
@@ -14,6 +15,7 @@ createInHousePackageRouter = APIRouter()
 
 @createInHousePackageRouter.post("/createPackage")
 async def createEnv(webhook: Webhook):
+    time.sleep(15)
     action_type = webhook.payload['action']['trigger']
     action_identifier = webhook.payload['action']['identifier']
     properties = webhook.payload['properties']

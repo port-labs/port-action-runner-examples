@@ -3,6 +3,7 @@ import logging
 import random
 import string
 import uuid
+import time
 
 from clients import port
 from fastapi import APIRouter
@@ -15,6 +16,7 @@ jupyterRouter = APIRouter()
 
 @jupyterRouter.post("/jupyter")
 async def createEnv(webhook: Webhook):
+    time.sleep(15)
     action_type = webhook.payload['action']['trigger']
     action_identifier = webhook.payload['action']['identifier']
     properties = webhook.payload['properties']

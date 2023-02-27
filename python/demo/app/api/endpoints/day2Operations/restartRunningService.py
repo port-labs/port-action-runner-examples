@@ -1,7 +1,7 @@
 import logging
 from fastapi import APIRouter
 import random
-
+import time 
 from clients import port
 from schemas.webhook import Webhook
 
@@ -12,6 +12,7 @@ restartRunningServiceRouter = APIRouter()
 
 @restartRunningServiceRouter.post("/restart")
 async def restartRunningService(webhook: Webhook):
+    time.sleep(15)
     action_type = webhook.payload['action']['trigger']
     action_identifier = webhook.payload['action']['identifier']
     entity_identifier = webhook.payload['entity']['identifier']

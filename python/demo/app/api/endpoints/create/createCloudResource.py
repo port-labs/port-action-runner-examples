@@ -2,6 +2,7 @@ import logging
 from fastapi import APIRouter, Depends
 from datetime import datetime
 import random
+import time
 
 from api.deps import verify_webhook
 from clients import port
@@ -15,6 +16,7 @@ createCloudResourceRouter = APIRouter()
 
 @createCloudResourceRouter.post("/CreateCloudResource")
 async def createCloudResource(webhook: Webhook):
+     time.sleep(15)
      action_type = webhook.payload['action']['trigger']
      action_identifier = webhook.payload['action']['identifier']
      properties = webhook.payload['properties']

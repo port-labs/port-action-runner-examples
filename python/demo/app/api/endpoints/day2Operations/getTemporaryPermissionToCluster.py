@@ -1,4 +1,5 @@
 import logging
+import time
 from fastapi import APIRouter
 import datetime
 import random
@@ -12,6 +13,7 @@ getTempPermissionRouter = APIRouter()
 
 @getTempPermissionRouter.post("/getTemporaryPermission")
 async def getTempPermission(webhook: Webhook):
+    time.sleep(15)
     action_type = webhook.payload['action']['trigger']
     action_identifier = webhook.payload['action']['identifier']
     entity_identifier = webhook.payload['entity']['identifier']

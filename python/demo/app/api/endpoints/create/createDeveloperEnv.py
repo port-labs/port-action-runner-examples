@@ -9,6 +9,7 @@ import random
 import random
 import string
 import uuid
+import time
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -17,6 +18,7 @@ createDeveloperEnvRouter = APIRouter()
 
 @createDeveloperEnvRouter.post("/CreateEnvironment")
 async def createEnv(webhook: Webhook):
+    time.sleep(15)
     action_type = webhook.payload['action']['trigger']
     action_identifier = webhook.payload['action']['identifier']
     properties = webhook.payload['properties']

@@ -1,5 +1,6 @@
 import logging
 import datetime
+import time
 import uuid
 import random
 from fastapi import APIRouter
@@ -14,6 +15,7 @@ extendEnvironmentTTLRouter = APIRouter()
 
 @extendEnvironmentTTLRouter.post("/extendEnvironmentTTL")
 async def extendEnvironmentTTL(webhook: Webhook):
+    time.sleep(15)
     action_type = webhook.payload['action']['trigger']
     action_identifier = webhook.payload['action']['identifier']
     entity_identifier = webhook.payload['entity']['identifier']

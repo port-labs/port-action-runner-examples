@@ -1,4 +1,5 @@
 import logging
+import time
 import datetime
 import uuid
 import random
@@ -14,6 +15,7 @@ deployServiceRouter = APIRouter()
 
 @deployServiceRouter.post("/deployService")
 async def deployService(webhook: Webhook):
+    time.sleep(15)
     action_type = webhook.payload['action']['trigger']
     action_identifier = webhook.payload['action']['identifier']
     properties = webhook.payload['properties']
