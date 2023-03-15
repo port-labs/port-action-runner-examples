@@ -13,7 +13,7 @@ lockUnlockRouter = APIRouter()
 
 @lockUnlockRouter.post("/lock")
 async def lockUnlock(webhook: Webhook):
-    time.sleep(15)
+    time.sleep(10)
     action_type = webhook.payload['action']['trigger']
     action_identifier = webhook.payload['action']['identifier']
     entity_identifier = webhook.payload['entity']['identifier']
@@ -21,6 +21,11 @@ async def lockUnlock(webhook: Webhook):
     blueprint = webhook.context.blueprint
 
     if action_type == 'DAY-2' and action_identifier == 'lock':
+        run_id = webhook.context.runId
+    
+        port.update_run_log(run_id, "Lock started.")
+        time.sleep(5)
+
         desiredState = properties["state"]
 
         if desiredState == "Locked":
@@ -35,13 +40,15 @@ async def lockUnlock(webhook: Webhook):
                     "locked": False,
                 }
             }
-        run_id = webhook.context.runId
-  
-        patch_status = port.patch_entity(blueprint=blueprint, identifier=entity_identifier,
+       
+        response = port.patch_entity(blueprint=blueprint, identifier=entity_identifier,
                                                body=body, run_id=run_id)
 
-        message = 'lock finished successfully' if 200 <= patch_status <= 299 else 'lock failed'
-        action_status = 'SUCCESS' if 200 <= patch_status <= 299 else 'FAILURE'
+        message = 'lock finished successfully' if 200 <= response.status_code <= 299 else 'lock failed'
+        
+        port.log_run_response_details(run_id, response, message)
+        
+        action_status = 'SUCCESS' if 200 <= response.status_code <= 299 else 'FAILURE'
         port.update_action(run_id, message, action_status, link="https://github.com/port-labs/repositoryName/actions/runs/" + str(random.randint(1,100)))
         return {'status': action_status}
 

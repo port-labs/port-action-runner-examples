@@ -2,6 +2,7 @@ import logging
 import json
 import requests
 from typing import Literal, Union
+import time
 
 from core.config import settings
 
@@ -21,18 +22,37 @@ def get_port_api_token():
 
     return token_response.json()['accessToken']
 
+def update_run_log(run_id: str, log_message: str):
+    """
+    Add log message to a run
+    """
+    token = get_port_api_token()
+    
+    body = {
+        'message': log_message
+    }
+
+    logger.info(f"update run log with: {json.dumps(body)}")
+    
+    response = requests.post(f"{settings.PORT_API_URL}/actions/runs/{run_id}/logs", json=body, headers={'Authorization': f'Bearer {token}'})
+    
+    logger.info(f"update run log response - status: {response.status_code}, body: {json.dumps(response.json())}")
+
 
 def create_entity(blueprint: str, identifier: str, body: dict, run_id: str, title: str = None):
     """
     Create new entity for blueprint in Port
     """
-
+    token = get_port_api_token()
+    
     logger.info(f"create entity with: {json.dumps(body)}")
+
     response = requests.post(f"{settings.PORT_API_URL}/blueprints/{blueprint}/entities?run_id={run_id}",
-                             json=body)
+                             json=body, headers={'Authorization': f'Bearer {token}'})
+
     logger.info(f"create entity response - status: {response.status_code}, body: {json.dumps(response.json())}")
 
-    return response.status_code
+    return response
 
 
 def patch_entity(blueprint: str, identifier: str, body: dict, run_id: str, title: str = None):
@@ -45,7 +65,7 @@ def patch_entity(blueprint: str, identifier: str, body: dict, run_id: str, title
                              json=body)
     logger.info(f"patch entity response - status: {response.status_code}, body: {json.dumps(response.json())}")
 
-    return response.status_code
+    return response
 
 def delete_entity(blueprint: str, identifier: str, run_id: str, title: str = None):
     """
@@ -56,7 +76,7 @@ def delete_entity(blueprint: str, identifier: str, run_id: str, title: str = Non
     response = requests.delete(f"{settings.PORT_API_URL}/blueprints/{blueprint}/entities/{identifier}?run_id={run_id}")
     logger.info(f"delete entity response - status: {response.status_code}, body: {json.dumps(response.json())}")
 
-    return response.status_code
+    return response
 
 def update_action(run_id: str, message: str, status: Union[Literal['FAILURE'], Literal['SUCCESS']], link=None):
     """
@@ -76,4 +96,17 @@ def update_action(run_id: str, message: str, status: Union[Literal['FAILURE'], L
     response = requests.patch(f"{settings.PORT_API_URL}/actions/runs/{run_id}", json=body)
     logger.info(f"update action response - status: {response.status_code}, body: {json.dumps(response.json())}")
 
-    return response.status_code
+    return response
+
+def log_run_response_details(run_id: str, response: str, final_message: str):
+    """
+    Log response details
+    """
+    update_run_log(run_id, final_message)
+    
+    response_details = json.loads(response.text)
+
+    if(response_details['ok'] == False):
+        update_run_log(run_id, response_details['error'])
+        time.sleep(2)
+        update_run_log(run_id, response_details['message'])
