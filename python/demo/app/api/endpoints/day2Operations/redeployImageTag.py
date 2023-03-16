@@ -12,7 +12,6 @@ redeployImageTagRouter = APIRouter()
 
 @redeployImageTagRouter.post("/redeployImageTag")
 async def redeployImageTag(webhook: Webhook):
-    time.sleep(10)
     action_type = webhook.payload['action']['trigger']
     action_identifier = webhook.payload['action']['identifier']
     entity_identifier = webhook.payload['entity']['identifier']
@@ -22,7 +21,7 @@ async def redeployImageTag(webhook: Webhook):
     if action_type == 'DAY-2' and action_identifier == 'redeployImageTag':
         run_id = webhook.context.runId
         port.update_run_log(run_id, "Redeploy Image Tag started.")
-        time.sleep(5)
+        time.sleep(10)
 
         body = webhook.payload['entity']
         del body['identifier']

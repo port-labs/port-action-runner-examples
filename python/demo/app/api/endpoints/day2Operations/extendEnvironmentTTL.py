@@ -15,7 +15,6 @@ extendEnvironmentTTLRouter = APIRouter()
 
 @extendEnvironmentTTLRouter.post("/extendEnvironmentTTL")
 async def extendEnvironmentTTL(webhook: Webhook):
-    time.sleep(10)
     action_type = webhook.payload['action']['trigger']
     action_identifier = webhook.payload['action']['identifier']
     entity_identifier = webhook.payload['entity']['identifier']
@@ -51,7 +50,7 @@ async def extendEnvironmentTTL(webhook: Webhook):
        run_id = webhook.context.runId
     
        port.update_run_log(run_id, "Extend environment TTL started...")
-       time.sleep(5)
+       time.sleep(10)
     
        response = port.patch_entity(blueprint=blueprint, identifier=entity_identifier,
                                                body=body, run_id=run_id)

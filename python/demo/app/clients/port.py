@@ -26,7 +26,6 @@ def update_run_log(run_id: str, log_message: str):
     """
     Add log message to a run
     """
-    token = get_port_api_token()
     
     body = {
         'message': log_message
@@ -34,7 +33,7 @@ def update_run_log(run_id: str, log_message: str):
 
     logger.info(f"update run log with: {json.dumps(body)}")
     
-    response = requests.post(f"{settings.PORT_API_URL}/actions/runs/{run_id}/logs", json=body, headers={'Authorization': f'Bearer {token}'})
+    response = requests.post(f"{settings.PORT_API_URL}/actions/runs/{run_id}/logs", json=body)
     
     logger.info(f"update run log response - status: {response.status_code}, body: {json.dumps(response.json())}")
 
@@ -43,12 +42,10 @@ def create_entity(blueprint: str, identifier: str, body: dict, run_id: str, titl
     """
     Create new entity for blueprint in Port
     """
-    token = get_port_api_token()
     
     logger.info(f"create entity with: {json.dumps(body)}")
 
-    response = requests.post(f"{settings.PORT_API_URL}/blueprints/{blueprint}/entities?run_id={run_id}",
-                             json=body, headers={'Authorization': f'Bearer {token}'})
+    response = requests.post(f"{settings.PORT_API_URL}/blueprints/{blueprint}/entities?run_id={run_id}",json=body)
 
     logger.info(f"create entity response - status: {response.status_code}, body: {json.dumps(response.json())}")
 

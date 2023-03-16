@@ -12,7 +12,6 @@ createServiceRouter = APIRouter()
 
 @createServiceRouter.post("/createService")
 async def createService(webhook: Webhook):
-    time.sleep(10)
     action_type = webhook.payload['action']['trigger']
     action_identifier = webhook.payload['action']['identifier']
     properties = webhook.payload['properties']
@@ -23,7 +22,7 @@ async def createService(webhook: Webhook):
         run_id = webhook.context.runId
 
         port.update_run_log(run_id, "Create service started...")
-        time.sleep(5)
+        time.sleep(10)
 
         body = {
         "identifier": properties.get("name",""),

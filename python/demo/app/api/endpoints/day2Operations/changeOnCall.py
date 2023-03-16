@@ -12,7 +12,6 @@ changeOnCallRouter = APIRouter()
 
 @changeOnCallRouter.post("/changeOnCall")
 async def changeOnCall(webhook: Webhook):
-    time.sleep(10)
     action_type = webhook.payload['action']['trigger']
     action_identifier = webhook.payload['action']['identifier']
     entity_identifier = webhook.payload['entity']['identifier']
@@ -22,7 +21,7 @@ async def changeOnCall(webhook: Webhook):
     if action_type == 'DAY-2' and action_identifier == 'changeOnCall':
         run_id = webhook.context.runId
         port.update_run_log(run_id, "Change on-call started.")
-        time.sleep(5)
+        time.sleep(10)
         body = {
             "properties": {
                 "on-call": properties["onCall"],

@@ -13,7 +13,6 @@ addMongoDatabaseRouter = APIRouter()
 
 @addMongoDatabaseRouter.post("/addMongoDatabase")
 async def addMongoDatabase(webhook: Webhook):
-    time.sleep(10)
     action_type = webhook.payload['action']['trigger']
     action_identifier = webhook.payload['action']['identifier']
     entity_identifier = webhook.payload['entity']['identifier']
@@ -26,6 +25,7 @@ async def addMongoDatabase(webhook: Webhook):
         action_status = 'SUCCESS'
         
         port.update_run_log(run_id, "Add Mongo Database started.")
+        time.sleep(10)
 
         port.update_action(run_id, message, action_status, link = "https://jenkins.getport.net/job/service/job/mongo/" + str(random.randint(1,100)))
         

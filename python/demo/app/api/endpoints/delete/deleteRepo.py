@@ -14,7 +14,6 @@ deleteRepoRouter = APIRouter()
 
 @deleteRepoRouter.post("/deleteRepo")
 async def createEnv(webhook: Webhook):
-    time.sleep(10)
     action_type = webhook.payload['action']['trigger']
     action_identifier = webhook.payload['action']['identifier']
     entity_identifier = webhook.payload['entity']['identifier']
@@ -25,7 +24,7 @@ async def createEnv(webhook: Webhook):
         run_id = webhook.context.runId
 
         port.update_run_log(run_id, "Repo deletion started.")
-        time.sleep(5)
+        time.sleep(10)
 
         if (entity_identifier in [
                 "subscription",

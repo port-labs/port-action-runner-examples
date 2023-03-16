@@ -12,7 +12,6 @@ restartRunningServiceRouter = APIRouter()
 
 @restartRunningServiceRouter.post("/restart")
 async def restartRunningService(webhook: Webhook):
-    time.sleep(10)
     action_type = webhook.payload['action']['trigger']
     action_identifier = webhook.payload['action']['identifier']
     entity_identifier = webhook.payload['entity']['identifier']
@@ -23,7 +22,7 @@ async def restartRunningService(webhook: Webhook):
         run_id = webhook.context.runId
 
         port.update_run_log(run_id, "Restart running service started.")
-        time.sleep(5)
+        time.sleep(10)
 
         message = 'Restart finished successfully'
         action_status = 'SUCCESS'

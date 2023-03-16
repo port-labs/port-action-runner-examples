@@ -14,7 +14,6 @@ rollbackRunningServiceRouter = APIRouter()
 
 @rollbackRunningServiceRouter.post("/rollback")
 async def rollbackRunningService(webhook: Webhook):
-    time.sleep(10)
     action_type = webhook.payload['action']['trigger']
     action_identifier = webhook.payload['action']['identifier']
     entity_identifier = webhook.payload['entity']['identifier']
@@ -25,7 +24,7 @@ async def rollbackRunningService(webhook: Webhook):
         run_id = webhook.context.runId
 
         port.update_run_log(run_id, "Rollback running service started.")
-        time.sleep(5)
+        time.sleep(10)
 
         body = {
             "properties": {
