@@ -15,7 +15,6 @@ extendEnvironmentTTLRouter = APIRouter()
 
 @extendEnvironmentTTLRouter.post("/extendEnvironmentTTL")
 async def extendEnvironmentTTL(webhook: Webhook):
-    time.sleep(15)
     action_type = webhook.payload['action']['trigger']
     action_identifier = webhook.payload['action']['identifier']
     entity_identifier = webhook.payload['entity']['identifier']
@@ -49,11 +48,17 @@ async def extendEnvironmentTTL(webhook: Webhook):
          }
 
        run_id = webhook.context.runId
-  
-       patch_status = port.patch_entity(blueprint=blueprint, identifier=entity_identifier,
+    
+       port.update_run_log(run_id, "Extend environment TTL started...")
+       time.sleep(10)
+    
+       response = port.patch_entity(blueprint=blueprint, identifier=entity_identifier,
                                                body=body, run_id=run_id)
 
-       message = 'lock finished successfully' if 200 <= patch_status <= 299 else 'lock failed'
-       action_status = 'SUCCESS' if 200 <= patch_status <= 299 else 'FAILURE'
+       message = 'Extend environment TTL finished successfully' if 200 <= response.status_code <= 299 else 'Extend environment TTL failed'
+       
+       port.log_run_response_details(run_id, response, message)
+
+       action_status = 'SUCCESS' if 200 <= response.status_code <= 299 else 'FAILURE'
        port.update_action(run_id, message, action_status, link = "https://github.com/port-labs/repositoryName/actions/runs/" + str(random.randint(1,100)))
        return {'status': action_status}

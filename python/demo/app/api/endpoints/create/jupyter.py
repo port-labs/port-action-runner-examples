@@ -16,7 +16,6 @@ jupyterRouter = APIRouter()
 
 @jupyterRouter.post("/jupyter")
 async def createEnv(webhook: Webhook):
-    time.sleep(15)
     action_type = webhook.payload['action']['trigger']
     action_identifier = webhook.payload['action']['identifier']
     properties = webhook.payload['properties']
@@ -25,6 +24,10 @@ async def createEnv(webhook: Webhook):
 
     if action_type == 'CREATE' and action_identifier == 'jupyter':
         run_id = webhook.context.runId
+
+        port.update_run_log(run_id, "Create jupyter started...")
+        time.sleep(10)
+
         ttl = properties.get("ttl")
         if ttl == "1 day":
             ttl = datetime.datetime.now() + datetime.timedelta(days=1)
@@ -56,7 +59,7 @@ async def createEnv(webhook: Webhook):
                 "logzio": "https://app.logz.io/?embed=true&shareToken=a4807e78-080f-400a-9fee-9cba43141ceb#/dashboard/osd/discover/?_a=(columns%3A!(message)%2Cfilters%3A!()%2Cindex%3A'logzioCustomerIndex*'%2Cinterval%3Aauto%2Cquery%3A(language%3Alucene%2Cquery%3A'')%2Csort%3A!())&_g=(filters%3A!()%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3Anow-15m%2Cto%3Anow))&accountIds=842181",
                 "replicaCount": 2,
                 "envType": "Prod"
-    },
+            },
             "relations": {
                 "environment": "sandbox",
                 "service": service,
@@ -82,11 +85,14 @@ async def createEnv(webhook: Webhook):
                 "data_exporter_test"
                 ],
             }
-    }
-            create_status = port.create_entity(blueprint='runningService', identifier='',
+            }
+            response = port.create_entity(blueprint='runningService', identifier='',
                                                body=serviceRunningBody, run_id=run_id)
             services.append(identifier)  
-            message = 'Running Service created successfully' if 200 <= create_status <= 299 else 'Running Service creation failed'
+            message = 'Running Service created successfully' if 200 <= response.status_code <= 299 else 'Running Service creation failed'
+
+            port.log_run_response_details(run_id, response, message)
+            
         body = {
         "identifier": properties["name"],
         "title": properties["name"],
@@ -99,11 +105,14 @@ async def createEnv(webhook: Webhook):
         "relations": {},
         "team": properties.get("team","")
     }
-        create_status = port.create_entity(blueprint=blueprint, identifier='',
+        response = port.create_entity(blueprint=blueprint, identifier='',
                                                body=body, run_id=run_id)
 
-        message = 'Service created successfully' if 200 <= create_status <= 299 else 'Service creation failed'
-        action_status = 'SUCCESS' if 200 <= create_status <= 299 else 'FAILURE'
+        message = 'Service created successfully' if 200 <= response.status_code <= 299 else 'Service creation failed'
+
+        port.log_run_response_details(run_id, response, message)
+        
+        action_status = 'SUCCESS' if 200 <= response.status_code <= 299 else 'FAILURE'
         port.update_action(run_id, message, action_status, link="https://github.com/port-labs/repositoryName/actions/runs/" + str(random.randint(1,100)))
 
         return {'status': action_status}

@@ -15,7 +15,6 @@ deployServiceRouter = APIRouter()
 
 @deployServiceRouter.post("/deployService")
 async def deployService(webhook: Webhook):
-    time.sleep(15)
     action_type = webhook.payload['action']['trigger']
     action_identifier = webhook.payload['action']['identifier']
     properties = webhook.payload['properties']
@@ -26,6 +25,9 @@ async def deployService(webhook: Webhook):
     if action_type == 'DAY-2' and action_identifier == 'deploy':
         run_id = webhook.context.runId
         
+        port.update_run_log(run_id, "Deploy Service started.")
+        time.sleep(10)
+
         body = {
         "identifier": entity['identifier'] + "-" + properties.get("environment","dev"),
         "title": entity['identifier'] + "-" + properties.get("environment","dev"),
@@ -72,11 +74,14 @@ async def deployService(webhook: Webhook):
         },
         "team": properties.get("team","")
     }
-        create_status = port.create_entity(blueprint=blueprint, identifier='',
+        response = port.create_entity(blueprint=blueprint, identifier='',
                                                body=body, run_id=run_id)
 
-        message = 'Service created successfully' if 200 <= create_status <= 299 else 'Service creation failed'
-        action_status = 'SUCCESS' if 200 <= create_status <= 299 else 'FAILURE'
+        message = 'Service created successfully' if 200 <= response.status_code <= 299 else 'Service creation failed'
+        
+        port.log_run_response_details(run_id, response, message)
+        
+        action_status = 'SUCCESS' if 200 <= response.status_code <= 299 else 'FAILURE'
         if (action_status == 'SUCCESS'):
             deployment = {
                 "title": entity['identifier'] + "-" + properties.get("environment","dev"),
@@ -97,8 +102,12 @@ async def deployService(webhook: Webhook):
                     }
                 }
 
-            create_status = port.create_entity(blueprint='deployment', identifier='',
+            response = port.create_entity(blueprint='deployment', identifier='',
                                                body=deployment, run_id=run_id)
+            
+            message = 'Deployment created successfully' if 200 <= response.status_code <= 299 else 'Deployment creation failed'
+
+            port.log_run_response_details(run_id, response, message)
 
         port.update_action(run_id, message, action_status, link="https://github.com/port-labs/repositoryName/actions/runs/" + str(random.randint(1,100)))
 

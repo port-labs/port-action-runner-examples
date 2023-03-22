@@ -13,7 +13,6 @@ getTempPermissionRouter = APIRouter()
 
 @getTempPermissionRouter.post("/getTemporaryPermission")
 async def getTempPermission(webhook: Webhook):
-    time.sleep(15)
     action_type = webhook.payload['action']['trigger']
     action_identifier = webhook.payload['action']['identifier']
     entity_identifier = webhook.payload['entity']['identifier']
@@ -22,7 +21,10 @@ async def getTempPermission(webhook: Webhook):
 
     if action_type == 'DAY-2' and action_identifier == 'getTemporaryPermission':
         run_id = webhook.context.runId
-        run_id = webhook.context.runId
+
+        port.update_run_log(run_id, "Get temporary permission for cluster started.")
+        time.sleep(10)
+
         ttl = properties.get("ttl")
 
         if ttl == "1 day":
@@ -61,10 +63,13 @@ async def getTempPermission(webhook: Webhook):
             },
         "relations": relations,
     }
-        create_status = port.create_entity(blueprint='permission', identifier='',body=body, run_id=run_id)
+        response = port.create_entity(blueprint='permission', identifier='',body=body, run_id=run_id)
 
-        message = 'Get temporary permission for cluster finished successfully' if 200 <= create_status <= 299 else 'Get temporary permission for cluster failed'
-        action_status = 'SUCCESS' if 200 <= create_status <= 299 else 'FAILURE'
+        message = 'Get temporary permission for cluster finished successfully' if 200 <= response.status_code <= 299 else 'Get temporary permission for cluster failed'
+
+        port.log_run_response_details(run_id, response, message)
+
+        action_status = 'SUCCESS' if 200 <= response.status_code <= 299 else 'FAILURE'
         port.update_action(run_id, message, action_status, "https://github.com/port-labs/repositoryName/actions/runs/" + str(random.randint(1,100)))
         return {'status': action_status}
 

@@ -14,7 +14,6 @@ deleteRepoRouter = APIRouter()
 
 @deleteRepoRouter.post("/deleteRepo")
 async def createEnv(webhook: Webhook):
-    time.sleep(15)
     action_type = webhook.payload['action']['trigger']
     action_identifier = webhook.payload['action']['identifier']
     entity_identifier = webhook.payload['entity']['identifier']
@@ -23,6 +22,10 @@ async def createEnv(webhook: Webhook):
 
     if action_type == 'DELETE' and action_identifier == 'deleteRepo':
         run_id = webhook.context.runId
+
+        port.update_run_log(run_id, "Repo deletion started.")
+        time.sleep(10)
+
         if (entity_identifier in [
                 "subscription",
                 "shipping",
@@ -44,14 +47,19 @@ async def createEnv(webhook: Webhook):
                 "ads",
                 "checkout"
             ]):
-            message = 'Service deletion because it has depedencies'
+            message = 'Service deletion failed because it has depedencies'
             action_status = 'FAILURE'
-            port.update_action(run_id, message, action_status)
+            response = port.update_action(run_id, message, action_status)
+            port.log_run_response_details(run_id, response, message)
+            
             return {'status': action_status}
         if properties['confirm'] is True:
-            delete_status = port.delete_entity(blueprint=blueprint, identifier=entity_identifier, run_id=run_id)
-            message = 'Service deleted successfully' if 200 <= delete_status <= 299 else 'Service deletion failed'
-            action_status = 'SUCCESS' if 200 <= delete_status <= 299 else 'FAILURE'
+            response = port.delete_entity(blueprint=blueprint, identifier=entity_identifier, run_id=run_id)
+            message = 'Service deleted successfully' if 200 <= response.status_code <= 299 else 'Service deletion failed'
+            
+            port.log_run_response_details(run_id, response, message)
+            
+            action_status = 'SUCCESS' if 200 <= response.status_code <= 299 else 'FAILURE'
             port.update_action(run_id, message, action_status, link = "https://github.com/port-labs/repositoryName/actions/runs/" + str(random.randint(1,100)))
         else:
             message = 'Service deletion cancelled'
