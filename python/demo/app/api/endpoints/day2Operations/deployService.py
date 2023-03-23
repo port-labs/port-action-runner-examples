@@ -107,7 +107,7 @@ async def deployService(webhook: Webhook):
             
             message = 'Deployment created successfully' if 200 <= response.status_code <= 299 else 'Deployment creation failed'
 
-            port.log_run_response_details(run_id, response, '✅' + message if 200 <= response.status_code <= 299 else '❌' + message)
+            port.log_run_response_details(run_id, response, '✅'.format(message) if 200 <= response.status_code <= 299 else '❌'.format(message))
 
         port.update_action(run_id, message, action_status, link="https://github.com/port-labs/repositoryName/actions/runs/" + str(random.randint(1,100)))
 
