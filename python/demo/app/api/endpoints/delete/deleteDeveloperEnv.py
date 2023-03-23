@@ -47,7 +47,7 @@ async def createEnv(webhook: Webhook):
         response = port.delete_entity(blueprint=blueprint, identifier=entity_identifier, run_id=run_id)
         message = 'Developer Env deleted successfully' if 200 <= response.status_code <= 299 else 'Developer Env deletion failed'
         
-        port.log_run_response_details(run_id, response, '✅ ${message}' if 200 <= response.status_code <= 299 else '❌ ${message}')
+        port.log_run_response_details(run_id, response, '✅' + message if 200 <= response.status_code <= 299 else '❌' + message)
         
         action_status = 'SUCCESS' if 200 <= response.status_code <= 299 else 'FAILURE'
         port.update_action(run_id, message, action_status, link = "https://jenkins.getport.net/job/service/job/mongo/" + str(random.randint(1,100)))
