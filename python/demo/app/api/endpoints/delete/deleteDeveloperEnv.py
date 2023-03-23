@@ -23,7 +23,7 @@ async def createEnv(webhook: Webhook):
     if action_type == 'DELETE' and action_identifier == 'DeleteEnvironment':
         run_id = webhook.context.runId
 
-        port.update_run_log(run_id, "Developer Env deletion started.")
+        port.update_run_log(run_id, "🚀 Developer Env deletion started.")
         time.sleep(10)
 
         if (entity_identifier in [
@@ -39,7 +39,7 @@ async def createEnv(webhook: Webhook):
                 "feature-a-dev-env",
                 "test-shizuko",
             ]):
-            message = 'Developer Env deletion because it has depedencies'
+            message = '🚀 Developer Env deletion because it has dependencies'
             action_status = 'FAILURE'
             port.update_action(run_id, message, action_status)
             return {'status': action_status}
@@ -47,7 +47,7 @@ async def createEnv(webhook: Webhook):
         response = port.delete_entity(blueprint=blueprint, identifier=entity_identifier, run_id=run_id)
         message = 'Developer Env deleted successfully' if 200 <= response.status_code <= 299 else 'Developer Env deletion failed'
         
-        port.log_run_response_details(run_id, response, message)
+        port.log_run_response_details(run_id, response, '✅ ${message}' if 200 <= response.status_code <= 299 else '❌ ${message}')
         
         action_status = 'SUCCESS' if 200 <= response.status_code <= 299 else 'FAILURE'
         port.update_action(run_id, message, action_status, link = "https://jenkins.getport.net/job/service/job/mongo/" + str(random.randint(1,100)))

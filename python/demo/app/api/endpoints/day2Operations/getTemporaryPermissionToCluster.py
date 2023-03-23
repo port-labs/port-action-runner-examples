@@ -22,7 +22,7 @@ async def getTempPermission(webhook: Webhook):
     if action_type == 'DAY-2' and action_identifier == 'getTemporaryPermission':
         run_id = webhook.context.runId
 
-        port.update_run_log(run_id, "Get temporary permission for cluster started.")
+        port.update_run_log(run_id, "🚀 Get temporary permission for cluster started.")
         time.sleep(10)
 
         ttl = properties.get("ttl")
@@ -67,7 +67,7 @@ async def getTempPermission(webhook: Webhook):
 
         message = 'Get temporary permission for cluster finished successfully' if 200 <= response.status_code <= 299 else 'Get temporary permission for cluster failed'
 
-        port.log_run_response_details(run_id, response, message)
+        port.log_run_response_details(run_id, response, '✅ ${message}' if 200 <= response.status_code <= 299 else '❌ ${message}')
 
         action_status = 'SUCCESS' if 200 <= response.status_code <= 299 else 'FAILURE'
         port.update_action(run_id, message, action_status, "https://github.com/port-labs/repositoryName/actions/runs/" + str(random.randint(1,100)))

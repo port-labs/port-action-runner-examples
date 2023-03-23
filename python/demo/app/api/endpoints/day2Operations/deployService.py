@@ -25,7 +25,7 @@ async def deployService(webhook: Webhook):
     if action_type == 'DAY-2' and action_identifier == 'deploy':
         run_id = webhook.context.runId
         
-        port.update_run_log(run_id, "Deploy Service started.")
+        port.update_run_log(run_id, "🚀 Deploy Service started.")
         time.sleep(10)
 
         body = {
@@ -77,7 +77,7 @@ async def deployService(webhook: Webhook):
         response = port.create_entity(blueprint=blueprint, identifier='',
                                                body=body, run_id=run_id)
 
-        message = 'Service created successfully' if 200 <= response.status_code <= 299 else 'Service creation failed'
+        message = '✅ Service created successfully' if 200 <= response.status_code <= 299 else '❌ Service creation failed'
         
         port.log_run_response_details(run_id, response, message)
         
@@ -107,7 +107,7 @@ async def deployService(webhook: Webhook):
             
             message = 'Deployment created successfully' if 200 <= response.status_code <= 299 else 'Deployment creation failed'
 
-            port.log_run_response_details(run_id, response, message)
+            port.log_run_response_details(run_id, response, '✅ ${message}' if 200 <= response.status_code <= 299 else '❌ ${message}')
 
         port.update_action(run_id, message, action_status, link="https://github.com/port-labs/repositoryName/actions/runs/" + str(random.randint(1,100)))
 
