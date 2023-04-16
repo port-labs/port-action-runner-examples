@@ -21,13 +21,12 @@ async def restartRunningService(webhook: Webhook):
     if action_type == 'DAY-2' and action_identifier == 'restart':
         run_id = webhook.context.runId
 
-        port.update_run_log(run_id, "Restart running service started.")
+        port.update_run_log(run_id, "🚀 Restart running service started.")
         time.sleep(10)
 
-        message = 'Restart finished successfully'
         action_status = 'SUCCESS'
-        port.update_run_log(run_id, "Restart running service completed.")
-        port.update_action(run_id, message, action_status, link="https://github.com/port-labs/repositoryName/actions/runs/" + str(random.randint(1,100)))
+        port.update_run_log(run_id, "✅ Restart running service completed.")
+        port.update_action(run_id, 'Restart finished successfully', action_status, link="https://github.com/port-labs/repositoryName/actions/runs/" + str(random.randint(1,100)))
         return {'status': action_status}
 
     return {'status': 'SUCCESS'}

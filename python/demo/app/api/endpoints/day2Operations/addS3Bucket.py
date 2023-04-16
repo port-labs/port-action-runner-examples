@@ -22,12 +22,11 @@ async def addS3Bucket(webhook: Webhook):
     if action_type == 'DAY-2' and action_identifier == 'addS3Bucket':
         run_id = webhook.context.runId
 
-        message = 'Pr Opened successfully'
         action_status = 'SUCCESS'
-        port.update_run_log(run_id, "Add S3 Bucket started.")
+        port.update_run_log(run_id, "🚀 Add S3 Bucket started.")
         time.sleep(10)
 
-        port.update_action(run_id, message, action_status, link = "https://jenkins.getport.net/job/service/job/mongo/" + str(random.randint(1,100)))
+        port.update_action(run_id, 'Pr Opened successfully', action_status, link = "https://jenkins.getport.net/job/service/job/mongo/" + str(random.randint(1,100)))
         
-        port.update_run_log(run_id, "Add S3 Bucket completed.")
+        port.update_run_log(run_id, "✅ Add S3 Bucket completed.")
         return {'status': action_status}

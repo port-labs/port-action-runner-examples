@@ -22,10 +22,9 @@ async def addSecret(webhook: Webhook):
     if action_type == 'DAY-2' and action_identifier == 'addSecret':
         run_id = webhook.context.runId
 
-        message = 'Pr Opened successfully'
         action_status = 'SUCCESS'
-        port.update_run_log(run_id, "Add Secret started.")
+        port.update_run_log(run_id, "🚀 Add Secret started.")
         time.sleep(10)
-        port.update_action(run_id, message, action_status, link = "https://jenkins.getport.net/job/service/job/mongo/" + str(random.randint(1,100)))
-        port.update_run_log(run_id, "Add Secret completed.")
+        port.update_action(run_id, 'Pr Opened successfully', action_status, link = "https://jenkins.getport.net/job/service/job/mongo/" + str(random.randint(1,100)))
+        port.update_run_log(run_id, "✅ Add Secret completed.")
         return {'status': action_status}

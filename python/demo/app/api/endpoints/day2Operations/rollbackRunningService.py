@@ -23,7 +23,7 @@ async def rollbackRunningService(webhook: Webhook):
     if action_type == 'DAY-2' and action_identifier == 'rollback':
         run_id = webhook.context.runId
 
-        port.update_run_log(run_id, "Rollback running service started.")
+        port.update_run_log(run_id, "🚀 Rollback running service started.")
         time.sleep(10)
 
         body = {
@@ -35,9 +35,9 @@ async def rollbackRunningService(webhook: Webhook):
         response = port.patch_entity(blueprint=blueprint, identifier=entity_identifier,
                                                body=body, run_id=run_id)
                                       
-        message = 'rollBack finished successfully' if 200 <= response.status_code <= 299 else 'lock failed'
+        message = 'RollBack finished successfully' if 200 <= response.status_code <= 299 else 'RollBack failed'
 
-        port.log_run_response_details(run_id, response, message)
+        port.log_run_response_details(run_id, response, '✅ ' + message if 200 <= response.status_code <= 299 else '❌ ' + message)
 
         action_status = 'SUCCESS' if 200 <= response.status_code <= 299 else 'FAILURE'
         port.update_action(run_id, message, action_status, link = "https://jenkins.getport.net/job/service/job/mongo/" + str(random.randint(1,100)))
