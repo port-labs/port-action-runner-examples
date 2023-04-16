@@ -46,35 +46,9 @@ async def deployService(webhook: Webhook):
             "logzio": "https://app.logz.io/?embed=true&shareToken=a4807e78-080f-400a-9fee-9cba43141ceb#/dashboard/osd/discover/?_a=(columns%3A!(message)%2Cfilters%3A!()%2Cindex%3A'logzioCustomerIndex*'%2Cinterval%3Aauto%2Cquery%3A(language%3Alucene%2Cquery%3A'')%2Csort%3A!())&_g=(filters%3A!()%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3Anow-15m%2Cto%3Anow))&accountIds=842181",
             "replicaCount": 2,
             "envType": "Prod"
-  },
-        "relations": {
-            "k8s-cluster": properties.get("environment","dev"),
-            "service": entity['identifier'],
-            "packages-versions": [
-                "express_1_4",
-                "mongodb_1_2",
-                "lodash_2_1",
-                "babel_1_6",
-                "webpack_1_2",
-                "jest_1_2",
-                "eslint_1_6",
-                "dotenv_1_5",
-                "moment_1_9",
-                "pug_1_7",
-                "EcommCore_3_9_6",
-                "OrderProcessor_3_8_5",
-                "InventoryAPI_2_7_3",
-                "CustomerPortal_1_4_5",
-                "AnalyticsTracker_2_7_2"
-                ],
-            "cloudResources": [
-            "cloud-test-store",
-            "data_exporter_test"
-            ],
-        },
-        "team": properties.get("team","")
     }
-        response = port.create_entity(blueprint=blueprint, identifier='',
+  }
+        response = port.patch_entity(blueprint=blueprint, identifier=entity['identifier'] + "-" + properties.get("environment","dev"),
                                                body=body, run_id=run_id)
 
         message = 'Service created successfully' if 200 <= response.status_code <= 299 else 'Service creation failed'
@@ -89,7 +63,7 @@ async def deployService(webhook: Webhook):
                 "user": "michaelmolina@shaw.org",
                 "status": "Success",
                 "duration": "7 min 13 sec",
-                "version": properties["branch"] + '.' + uuid.uuid4(),
+                "version": properties["branch"] + "." + str(uuid.uuid4()),
                 "commitSha": "e7f4329",
                 "jiraTicket": "https://devportal.atlassian.jira.net/browse/" + properties["branch"],
                 "service": entity['identifier'],
