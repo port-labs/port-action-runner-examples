@@ -5,6 +5,7 @@ from api.endpoints.create.createInHousePackage import \
     createInHousePackageRouter
 from api.endpoints.create.createService import createServiceRouter
 from api.endpoints.create.jupyter import jupyterRouter
+from api.endpoints.create.createCluster import createClusterRouter
 from api.endpoints.day2Operations.addMongoDatabase import \
     addMongoDatabaseRouter
 from api.endpoints.day2Operations.addS3Bucket import addS3BucketRouter
@@ -54,6 +55,6 @@ app.include_router(addS3BucketRouter, prefix=settings.API_STR)
 app.include_router(addMongoDatabaseRouter, prefix=settings.API_STR)
 app.include_router(jupyterRouter, prefix=settings.API_STR)
 app.include_router(addSecretRouter, prefix=settings.API_STR)
-
+app.include_router(createClusterRouter, prefix=settings.API_STR)
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=3006, reload=True)
