@@ -13,7 +13,7 @@ createClusterRouter = APIRouter()
 @createClusterRouter.post("/createCluster")
 async def createService(webhook: Webhook):
     
-    action_identifier = webhook['action']
+    action_identifier = webhook.action
     properties = webhook.payload['properties']
     blueprint = webhook.context.blueprint
 

@@ -16,7 +16,7 @@ createCloudResourceRouter = APIRouter()
 
 @createCloudResourceRouter.post("/CreateCloudResource")
 async def createCloudResource(webhook: Webhook):
-     action_identifier = webhook['action']
+     action_identifier = webhook.action
      properties = webhook.payload['properties']
      blueprint = webhook.context.blueprint
 

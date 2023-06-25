@@ -13,7 +13,7 @@ changeOwnershipRouter = APIRouter()
 @changeOwnershipRouter.post("/changeOwnership")
 async def changeReplicaCount(webhook: Webhook):
     
-    action_identifier = webhook['action']
+    action_identifier = webhook.action
     entity_identifier = webhook.payload['entity']['identifier']
     properties = webhook.payload['properties']
     blueprint = webhook.context.blueprint

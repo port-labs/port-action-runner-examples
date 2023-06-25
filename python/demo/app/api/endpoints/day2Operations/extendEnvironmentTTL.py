@@ -16,7 +16,7 @@ extendEnvironmentTTLRouter = APIRouter()
 @extendEnvironmentTTLRouter.post("/extendEnvironmentTTL")
 async def extendEnvironmentTTL(webhook: Webhook):
     
-    action_identifier = webhook['action']
+    action_identifier = webhook.action
     entity_identifier = webhook.payload['entity']['identifier']
     properties = webhook.payload['properties']
     entity = webhook.payload['entity']

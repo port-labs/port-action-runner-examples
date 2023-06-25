@@ -17,7 +17,7 @@ jupyterRouter = APIRouter()
 @jupyterRouter.post("/jupyter")
 async def createEnv(webhook: Webhook):
     
-    action_identifier = webhook['action']
+    action_identifier = webhook.action
     properties = webhook.payload['properties']
     blueprint = webhook.context.blueprint
 

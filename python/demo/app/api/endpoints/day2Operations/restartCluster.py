@@ -13,7 +13,7 @@ restartClusterRouter = APIRouter()
 @restartClusterRouter.post("/restartCluster")
 async def restartCluster(webhook: Webhook):
     
-    action_identifier = webhook['action']
+    action_identifier = webhook.action
 
     if  action_identifier == 'restartCluster':
         run_id = webhook.context.runId

@@ -16,7 +16,7 @@ deployServiceRouter = APIRouter()
 @deployServiceRouter.post("/deployService")
 async def deployService(webhook: Webhook):
     
-    action_identifier = webhook['action']
+    action_identifier = webhook.action
     properties = webhook.payload['properties']
     entity = webhook.payload['entity']
     blueprint = "runningService"

@@ -18,7 +18,7 @@ router = APIRouter()
 async def handle_create_bucket_webhook(webhook: Webhook):
     logger.info(f"Webhook body: {webhook}")
     
-    action_identifier = webhook['action']
+    action_identifier = webhook.action
     properties = webhook.payload['properties']
 
     if  action_identifier == 'CreateBucket':
