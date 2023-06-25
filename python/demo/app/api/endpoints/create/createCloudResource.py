@@ -16,12 +16,11 @@ createCloudResourceRouter = APIRouter()
 
 @createCloudResourceRouter.post("/CreateCloudResource")
 async def createCloudResource(webhook: Webhook):
-     action_type = webhook.payload['action']['trigger']
-     action_identifier = webhook.payload['action']['identifier']
+     action_identifier = webhook['action']
      properties = webhook.payload['properties']
      blueprint = webhook.context.blueprint
 
-     if action_type == 'CREATE' and action_identifier == 'CreateCloudResource':
+     if  action_identifier == 'CreateCloudResource':
         run_id = webhook.context.runId
 
         port.update_run_log(run_id, "🚀 Create cloud resource - " + properties.get("service","") + " started...")

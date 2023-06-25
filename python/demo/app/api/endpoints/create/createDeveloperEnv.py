@@ -18,13 +18,13 @@ createDeveloperEnvRouter = APIRouter()
 
 @createDeveloperEnvRouter.post("/CreateEnvironment")
 async def createEnv(webhook: Webhook):
-    action_type = webhook.payload['action']['trigger']
-    action_identifier = webhook.payload['action']['identifier']
+    
+    action_identifier = webhook['action']
     properties = webhook.payload['properties']
     blueprint = webhook.context.blueprint
 
 
-    if action_type == 'CREATE' and action_identifier == 'CreateEnvironment':
+    if  action_identifier == 'CreateEnvironment':
         run_id = webhook.context.runId
 
         port.update_run_log(run_id, "🚀 Create environment started...")

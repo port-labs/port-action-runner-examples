@@ -14,13 +14,13 @@ deleteDeveloperEnvRouter = APIRouter()
 
 @deleteDeveloperEnvRouter.post("/deletedveloperEnv")
 async def createEnv(webhook: Webhook):
-    action_type = webhook.payload['action']['trigger']
-    action_identifier = webhook.payload['action']['identifier']
+    
+    action_identifier = webhook['action']
     entity_identifier = webhook.payload['entity']['identifier']
     properties = webhook.payload['properties']
     blueprint = webhook.context.blueprint
 
-    if action_type == 'DELETE' and action_identifier == 'DeleteEnvironment':
+    if  action_identifier == 'DeleteEnvironment':
         run_id = webhook.context.runId
 
         port.update_run_log(run_id, "🚀 Developer Env deletion started.")

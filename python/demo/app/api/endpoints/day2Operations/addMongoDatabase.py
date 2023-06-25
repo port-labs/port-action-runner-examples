@@ -13,13 +13,13 @@ addMongoDatabaseRouter = APIRouter()
 
 @addMongoDatabaseRouter.post("/addMongoDatabase")
 async def addMongoDatabase(webhook: Webhook):
-    action_type = webhook.payload['action']['trigger']
-    action_identifier = webhook.payload['action']['identifier']
+    
+    action_identifier = webhook['action']
     entity_identifier = webhook.payload['entity']['identifier']
     properties = webhook.payload['properties']
     blueprint = webhook.context.blueprint
 
-    if action_type == 'DAY-2' and action_identifier == 'addMongoDatabase':
+    if  action_identifier == 'addMongoDatabase':
         run_id = webhook.context.runId
         action_status = 'SUCCESS'
         

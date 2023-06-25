@@ -12,10 +12,10 @@ restartClusterRouter = APIRouter()
 
 @restartClusterRouter.post("/restartCluster")
 async def restartCluster(webhook: Webhook):
-    action_type = webhook.payload['action']['trigger']
-    action_identifier = webhook.payload['action']['identifier']
+    
+    action_identifier = webhook['action']
 
-    if action_type == 'DAY-2' and action_identifier == 'restartCluster':
+    if  action_identifier == 'restartCluster':
         run_id = webhook.context.runId
 
         port.update_run_log(run_id, "🚀 Restart cluster started.")

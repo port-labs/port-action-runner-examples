@@ -15,14 +15,14 @@ deployServiceRouter = APIRouter()
 
 @deployServiceRouter.post("/deployService")
 async def deployService(webhook: Webhook):
-    action_type = webhook.payload['action']['trigger']
-    action_identifier = webhook.payload['action']['identifier']
+    
+    action_identifier = webhook['action']
     properties = webhook.payload['properties']
     entity = webhook.payload['entity']
     blueprint = "runningService"
 
 
-    if action_type == 'DAY-2' and action_identifier == 'deploy':
+    if  action_identifier == 'deploy':
         run_id = webhook.context.runId
         
         port.update_run_log(run_id, "🚀 Deploy Service started.")

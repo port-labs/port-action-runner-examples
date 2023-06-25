@@ -15,14 +15,14 @@ extendEnvironmentTTLRouter = APIRouter()
 
 @extendEnvironmentTTLRouter.post("/extendEnvironmentTTL")
 async def extendEnvironmentTTL(webhook: Webhook):
-    action_type = webhook.payload['action']['trigger']
-    action_identifier = webhook.payload['action']['identifier']
+    
+    action_identifier = webhook['action']
     entity_identifier = webhook.payload['entity']['identifier']
     properties = webhook.payload['properties']
     entity = webhook.payload['entity']
     blueprint = webhook.context.blueprint
 
-    if action_type == 'DAY-2' and action_identifier == 'ExtendEnvironmentTTL':
+    if  action_identifier == 'ExtendEnvironmentTTL':
        ttl = properties.get("ttl")
        entityTTL = entity["properties"]["ttl"]
        if(entityTTL == None):
