@@ -29,6 +29,8 @@ from api.endpoints.delete.deleteDeveloperEnv import deleteDeveloperEnvRouter
 from api.endpoints.delete.deleteRepo import deleteRepoRouter
 from api.endpoints.day2Operations.addSecret import addSecretRouter
 from api.endpoints.day2Operations.restartCluster import restartClusterRouter
+from api.endpoints.day2Operations.createIssue import createIssueRouter
+from api.endpoints.day2Operations.createVulnerabilityIssue import createVulnerabilityIssueRouter
 from core.config import settings
 from fastapi import FastAPI
 
@@ -58,5 +60,7 @@ app.include_router(jupyterRouter, prefix=settings.API_STR)
 app.include_router(addSecretRouter, prefix=settings.API_STR)
 app.include_router(createClusterRouter, prefix=settings.API_STR)
 app.include_router(restartClusterRouter, prefix=settings.API_STR)
+app.include_router(createIssueRouter, prefix=settings.API_STR)
+app.include_router(createVulnerabilityIssueRouter, prefix=settings.API_STR)
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=3006, reload=True)
