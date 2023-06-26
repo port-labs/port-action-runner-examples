@@ -21,6 +21,6 @@ async def createService(webhook: Webhook):
         time.sleep(10)
 
         action_status = 'SUCCESS'
-        port.update_run_log(run_id, "✅ Create issue service completed.")
+        port.update_run_log(run_id, "✅ Create issue completed.")
         port.update_action(run_id, 'Restart finished successfully', action_status, link="https://demo.atlassian.net/jira/browse/DEMO-" + str(random.randint(1,100)))
         return {'status': action_status}
