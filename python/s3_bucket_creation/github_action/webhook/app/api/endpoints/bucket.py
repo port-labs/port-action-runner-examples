@@ -15,11 +15,11 @@ router = APIRouter()
 @router.post("/bucket", dependencies=[Depends(verify_webhook)])
 async def handle_create_bucket_webhook(webhook: Webhook):
     logger.info(f"Webhook body: {webhook}")
-    action_type = webhook.payload['action']['trigger']
-    action_identifier = webhook.payload['action']['identifier']
+    
+    action_identifier = webhook.action
     properties = webhook.payload['properties']
 
-    if action_type == 'CREATE' and action_identifier == 'CreateBucket':
+    if  action_identifier == 'CreateBucket':
         bucket_name = properties['bucket-name']
         aws_region = properties['aws-region']
         acl = properties['acl']
